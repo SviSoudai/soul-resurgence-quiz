@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What's Your Sacred Archetype?</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0a0812;
+    --parchment: #f5f0e8;
+    --gold: #c9a84c;
+    --gold-light: #e8d08a;
+    --ember: #c4542a;
+    --slate: #2a2535;
+    --mist: #8b8ba0;
+    --glow: rgba(201,168,76,0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--ink);
+    color: var(--parchment);
+    font-family: 'Crimson Pro', Georgia, serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  /* Star field */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(1px 1px at 15% 20%, rgba(255,255,255,0.6) 0%, transparent 100%),
+      radial-gradient(1px 1px at 35% 60%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(1.5px 1.5px at 55% 15%, rgba(255,255,255,0.7) 0%, transparent 100%),
+      radial-gradient(1px 1px at 75% 45%, rgba(255,255,255,0.5) 0%, transparent 100%),
+      radial-gradient(1px 1px at 90% 80%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 25% 85%, rgba(255,255,255,0.3) 0%, transparent 100%),
+      radial-gradient(1.5px 1.5px at 65% 70%, rgba(255,255,255,0.6) 0%, transparent 100%),
+      radial-gradient(1px 1px at 45% 35%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 80% 10%, rgba(255,255,255,0.5) 0%, transparent 100%),
+      radial-gradient(1px 1px at 10% 50%, rgba(255,255,255,0.3) 0%, transparent 100%),
+      radial-gradient(1px 1px at 50% 90%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 20% 40%, rgba(201,168,76,0.3) 0%, transparent 100%),
+      radial-gradient(1px 1px at 70% 25%, rgba(201,168,76,0.2) 0%, transparent 100%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Nebula glow */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 40% at 20% 30%, rgba(80,40,120,0.25) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 60% at 80% 70%, rgba(40,80,120,0.2) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 30% at 50% 50%, rgba(120,60,40,0.1) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+  }
+
+  /* SCREENS */
+  .screen { display: none; animation: fadeIn 0.6s ease; }
+  .screen.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* INTRO SCREEN */
+  .intro-symbol {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding-top: 2rem;
+  }
+
+  .mandala {
+    width: 90px;
+    height: 90px;
+    margin: 0 auto 1.5rem;
+    position: relative;
+    animation: slowSpin 30s linear infinite;
+  }
+
+  @keyframes slowSpin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .mandala svg { width: 100%; height: 100%; }
+
+  h1 {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(1.4rem, 5vw, 2rem);
+    color: var(--gold);
+    text-align: center;
+    line-height: 1.3;
+    letter-spacing: 0.02em;
+    margin-bottom: 0.5rem;
+  }
+
+  .subtitle {
+    text-align: center;
+    color: var(--mist);
+    font-size: 1.05rem;
+    font-style: italic;
+    margin-bottom: 2.5rem;
+    letter-spacing: 0.03em;
+  }
+
+  .intro-text {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    font-size: 1.05rem;
+    line-height: 1.75;
+    color: rgba(245,240,232,0.85);
+  }
+
+  .intro-text p { margin-bottom: 0.8rem; }
+  .intro-text p:last-child { margin-bottom: 0; }
+
+  /* DIVIDER */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 1.5rem 0;
+    color: var(--gold);
+    opacity: 0.4;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+  }
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--gold);
+    opacity: 0.5;
+  }
+
+  /* BUTTONS */
+  .btn-primary {
+    display: block;
+    width: 100%;
+    padding: 1rem 2rem;
+    background: linear-gradient(135deg, var(--gold) 0%, #a07830 100%);
+    color: var(--ink);
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(201,168,76,0.4);
+  }
+
+  /* QUIZ SCREEN */
+  .progress-bar {
+    width: 100%;
+    height: 2px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 2px;
+    margin-bottom: 2.5rem;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold), var(--gold-light));
+    border-radius: 2px;
+    transition: width 0.5s ease;
+  }
+
+  .question-counter {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    opacity: 0.6;
+    margin-bottom: 0.75rem;
+    text-transform: uppercase;
+  }
+
+  .question-text {
+    font-size: clamp(1.15rem, 3.5vw, 1.4rem);
+    line-height: 1.55;
+    color: var(--parchment);
+    margin-bottom: 2rem;
+    font-weight: 300;
+  }
+
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .option {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: rgba(245,240,232,0.8);
+    text-align: left;
+    font-family: 'Crimson Pro', serif;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .option::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--glow), transparent);
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
+
+  .option:hover {
+    border-color: rgba(201,168,76,0.5);
+    color: var(--parchment);
+    transform: translateX(4px);
+  }
+
+  .option:hover::before { opacity: 1; }
+
+  .option.selected {
+    border-color: var(--gold);
+    background: rgba(201,168,76,0.1);
+    color: var(--gold-light);
+  }
+
+  .option.selected::before { opacity: 1; }
+
+  /* RESULT SCREEN */
+  .result-header {
+    text-align: center;
+    padding: 2rem 0 1.5rem;
+    position: relative;
+  }
+
+  .archetype-sigil {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+    display: block;
+    animation: pulseGlow 3s ease-in-out infinite;
+  }
+
+  @keyframes pulseGlow {
+    0%, 100% { filter: drop-shadow(0 0 8px rgba(201,168,76,0.4)); }
+    50% { filter: drop-shadow(0 0 20px rgba(201,168,76,0.8)); }
+  }
+
+  .archetype-label {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    color: var(--gold);
+    opacity: 0.7;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+
+  .archetype-name {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(1.6rem, 6vw, 2.4rem);
+    color: var(--gold);
+    line-height: 1.2;
+    margin-bottom: 0.3rem;
+  }
+
+  .archetype-element {
+    font-style: italic;
+    color: var(--mist);
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .tagline {
+    font-size: 1.15rem;
+    line-height: 1.65;
+    color: rgba(245,240,232,0.9);
+    font-style: italic;
+    padding: 1.25rem 1.5rem;
+    border-left: 2px solid var(--gold);
+    margin-bottom: 2rem;
+    background: rgba(201,168,76,0.05);
+    border-radius: 0 8px 8px 0;
+  }
+
+  .triad {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .triad-card {
+    border-radius: 10px;
+    padding: 1.25rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .triad-card.shadow {
+    background: rgba(30,20,50,0.6);
+    border: 1px solid rgba(196,84,42,0.3);
+  }
+
+  .triad-card.gift {
+    background: rgba(20,40,30,0.6);
+    border: 1px solid rgba(80,160,100,0.3);
+  }
+
+  .triad-card.siddhi {
+    background: rgba(20,30,50,0.6);
+    border: 1px solid rgba(201,168,76,0.4);
+  }
+
+  .triad-label {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .shadow .triad-label { color: #e0785a; }
+  .gift .triad-label { color: #7dc898; }
+  .siddhi .triad-label { color: var(--gold); }
+
+  .triad-content {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: rgba(245,240,232,0.85);
+  }
+
+  .need-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 1.25rem;
+    margin-bottom: 2rem;
+  }
+
+  .need-label {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--mist);
+    margin-bottom: 0.5rem;
+  }
+
+  .need-content {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: rgba(245,240,232,0.8);
+    font-style: italic;
+  }
+
+  .cta-block {
+    background: linear-gradient(135deg, rgba(201,168,76,0.1), rgba(80,40,120,0.1));
+    border: 1px solid rgba(201,168,76,0.25);
+    border-radius: 12px;
+    padding: 1.75rem 1.5rem;
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .cta-block h3 {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 0.85rem;
+    color: var(--gold);
+    margin-bottom: 0.75rem;
+    letter-spacing: 0.05em;
+  }
+
+  .cta-block p {
+    font-size: 1rem;
+    line-height: 1.65;
+    color: rgba(245,240,232,0.8);
+    margin-bottom: 1.25rem;
+  }
+
+  .btn-retake {
+    background: transparent;
+    border: 1px solid rgba(201,168,76,0.4);
+    color: var(--gold);
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 0.75rem 2rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    margin-top: 1rem;
+  }
+
+  .btn-retake:hover {
+    background: rgba(201,168,76,0.1);
+    border-color: var(--gold);
+  }
+
+  /* EMAIL CAPTURE */
+  .email-block {
+    margin-bottom: 1.5rem;
+  }
+
+  .email-block input {
+    width: 100%;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 8px;
+    padding: 0.9rem 1rem;
+    color: var(--parchment);
+    font-family: 'Crimson Pro', serif;
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+    outline: none;
+    transition: border-color 0.25s;
+  }
+
+  .email-block input::placeholder { color: var(--mist); opacity: 0.6; }
+  .email-block input:focus { border-color: var(--gold); }
+
+  /* Confirmation */
+  .email-confirm {
+    display: none;
+    text-align: center;
+    color: #7dc898;
+    font-size: 0.95rem;
+    padding: 0.75rem;
+    font-style: italic;
+  }
+
+  /* Loading */
+  .loading {
+    text-align: center;
+    padding: 4rem 2rem;
+  }
+
+  .loading-sigil {
+    font-size: 3rem;
+    animation: slowSpin 4s linear infinite;
+    display: block;
+    margin-bottom: 1rem;
+  }
+
+  .loading-text {
+    color: var(--mist);
+    font-style: italic;
+    font-size: 1.05rem;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- INTRO SCREEN -->
+  <div class="screen active" id="screen-intro">
+    <div class="intro-symbol">
+      <div class="mandala">
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="50" cy="50" r="45" stroke="#c9a84c" stroke-width="0.5" opacity="0.4"/>
+          <circle cx="50" cy="50" r="35" stroke="#c9a84c" stroke-width="0.5" opacity="0.3"/>
+          <circle cx="50" cy="50" r="20" stroke="#c9a84c" stroke-width="0.5" opacity="0.5"/>
+          <polygon points="50,8 58,35 88,35 64,52 73,80 50,63 27,80 36,52 12,35 42,35" fill="none" stroke="#c9a84c" stroke-width="0.8" opacity="0.6"/>
+          <circle cx="50" cy="50" r="5" fill="#c9a84c" opacity="0.7"/>
+          <line x1="50" y1="5" x2="50" y2="95" stroke="#c9a84c" stroke-width="0.3" opacity="0.2"/>
+          <line x1="5" y1="50" x2="95" y2="50" stroke="#c9a84c" stroke-width="0.3" opacity="0.2"/>
+          <line x1="14" y1="14" x2="86" y2="86" stroke="#c9a84c" stroke-width="0.3" opacity="0.2"/>
+          <line x1="86" y1="14" x2="14" y2="86" stroke="#c9a84c" stroke-width="0.3" opacity="0.2"/>
+        </svg>
+      </div>
+    </div>
+
+    <h1>What's Your Sacred Archetype?</h1>
+    <p class="subtitle">A shamanic + galactic self-discovery portal</p>
+
+    <div class="intro-text">
+      <p>You didn't come here by accident.</p>
+      <p>Every soul carries a signature - a way of moving through the world, creating depth, and yes, a shadow that shows up right on schedule.</p>
+      <p>Seven questions. One archetype. Your shadow, your gift, and what you're actually capable of.</p>
+    </div>
+
+    <div class="divider">✦</div>
+
+    <button class="btn-primary" onclick="startQuiz()">BEGIN THE INQUIRY</button>
+  </div>
+
+  <!-- QUIZ SCREEN -->
+  <div class="screen" id="screen-quiz">
+    <div class="progress-bar">
+      <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+    </div>
+    <div class="question-counter" id="question-counter">Question 1 of 7</div>
+    <div class="question-text" id="question-text"></div>
+    <div class="options" id="options-container"></div>
+  </div>
+
+  <!-- LOADING SCREEN -->
+  <div class="screen" id="screen-loading">
+    <div class="loading">
+      <span class="loading-sigil">✦</span>
+      <p class="loading-text">Reading your signature in the field...</p>
+    </div>
+  </div>
+
+  <!-- TIEBREAKER SCREEN -->
+  <div class="screen" id="screen-tiebreaker">
+    <div style="padding-top: 2rem; text-align: center; margin-bottom: 2rem;">
+      <div class="archetype-label" style="margin-bottom: 0.75rem;">Two signatures are calling</div>
+      <h1 style="font-size: clamp(1.2rem, 4vw, 1.6rem); margin-bottom: 0.75rem;">You're standing at a crossroads.</h1>
+      <p style="color: rgba(245,240,232,0.7); font-style: italic; font-size: 1rem; line-height: 1.6;">Two archetypes are equally alive in you right now. This isn't indecision - it's complexity. Which one feels most true <em>today</em>?</p>
+    </div>
+    <div id="tiebreaker-options" style="display: flex; flex-direction: column; gap: 1.25rem;"></div>
+  </div>
+
+  <!-- RESULT SCREEN -->
+  <div class="screen" id="screen-result">
+    <div class="result-header">
+      <span class="archetype-sigil" id="result-sigil"></span>
+      <div class="archetype-label">Your Sacred Archetype</div>
+      <div class="archetype-name" id="result-name"></div>
+      <div class="archetype-element" id="result-element"></div>
+    </div>
+
+    <div class="tagline" id="result-tagline"></div>
+
+    <div class="triad">
+      <div class="triad-card shadow">
+        <div class="triad-label">🜂 Shadow</div>
+        <div class="triad-content" id="result-shadow"></div>
+      </div>
+      <div class="triad-card gift">
+        <div class="triad-label">✦ Gift</div>
+        <div class="triad-content" id="result-gift"></div>
+      </div>
+      <div class="triad-card siddhi">
+        <div class="triad-label">◈ Siddhi</div>
+        <div class="triad-content" id="result-siddhi"></div>
+      </div>
+    </div>
+
+    <div class="need-card">
+      <div class="need-label">What you most need to receive</div>
+      <div class="need-content" id="result-need"></div>
+    </div>
+
+    <div style="border-radius:10px; padding:1.25rem; margin-bottom:1rem; background:rgba(20,15,40,0.6); border:1px solid rgba(140,100,200,0.3);">
+      <div style="font-family:'Cinzel Decorative',serif; font-size:0.6rem; letter-spacing:0.2em; text-transform:uppercase; color:#b090e0; margin-bottom:0.6rem;">🌀 Message from your Spirit Animal</div>
+      <div id="result-spirit" style="font-size:1rem; line-height:1.7; color:rgba(245,240,232,0.85); font-style:italic; font-family:'Crimson Pro',serif;"></div>
+    </div>
+
+    <div style="border-radius:10px; padding:1.25rem; margin-bottom:1rem; background:rgba(15,35,25,0.6); border:1px solid rgba(100,180,130,0.3);">
+      <div style="font-family:'Cinzel Decorative',serif; font-size:0.6rem; letter-spacing:0.2em; text-transform:uppercase; color:#80c8a0; margin-bottom:0.6rem;">◯ Your Mantra</div>
+      <div id="result-mantra" style="font-size:1.05rem; line-height:1.7; color:rgba(245,240,232,0.9); font-style:italic; font-family:'Crimson Pro',serif;"></div>
+    </div>
+
+    <div style="border-radius:10px; padding:1.25rem; margin-bottom:2rem; background:rgba(30,20,10,0.6); border:1px solid rgba(201,168,76,0.25);">
+      <div style="font-family:'Cinzel Decorative',serif; font-size:0.6rem; letter-spacing:0.2em; text-transform:uppercase; color:#c9a84c; margin-bottom:0.6rem;">🜁 Element to Work With</div>
+      <div id="result-working-element" style="font-size:1rem; line-height:1.7; color:rgba(245,240,232,0.85); font-family:'Crimson Pro',serif;"></div>
+    </div>
+
+    <div class="cta-block">
+      <h3>Ready to go deeper?</h3>
+      <p id="result-cta"></p>
+      <p style="font-size:0.95rem; color:rgba(245,240,232,0.6); margin-bottom:1.25rem; font-style:italic;">Book a 1:1 call with Svi and go into the full depth of your archetype, shadow work, and what's actually trying to move in your life.</p>
+      <a href="https://wa.me/19546004590?text=Hi%20Svi%2C%20I%20just%20took%20the%20Sacred%20Archetype%20Quiz%20and%20I%27d%20love%20to%20book%20a%201%3A1%20call." target="_blank" style="text-decoration:none;">
+        <button class="btn-primary" style="margin-bottom:0.75rem; display:flex; align-items:center; justify-content:center; gap:0.6rem;">
+          <span>💬</span> BOOK VIA WHATSAPP
+        </button>
+      </a>
+      <a href="https://www.instagram.com/SviSoudai" target="_blank" style="text-decoration:none;">
+        <button class="btn-retake" style="margin-top:0; display:flex; align-items:center; justify-content:center; gap:0.6rem;">
+          <span>📸</span> FIND ME ON INSTAGRAM
+        </button>
+      </a>
+    </div>
+
+    <button class="btn-retake" onclick="retakeQuiz()" style="margin-top:1rem;">↺ Take it again</button>
+  </div>
+
+</div>
+
+<script>
+const questions = [
+  {
+    text: "When you walk into a room, what's the first thing that happens?",
+    options: [
+      { text: "You immediately scan for what's off, stuck, or needs to shift.", archetype: "firebringer" },
+      { text: "You feel everyone's energy and quietly adjust to hold the space.", archetype: "hollowbone" },
+      { text: "You start connecting people who should know each other.", archetype: "weaverhand" },
+      { text: "You notice who's being left out or unseen.", archetype: "rootkeeper" },
+      { text: "You clock the invisible dynamics - who holds power, who's pretending.", archetype: "bridgewalker" },
+      { text: "You arrive with an idea that reframes everything.", archetype: "starseeder" }
+    ]
+  },
+  {
+    text: "Your friends would say your superpower is...",
+    options: [
+      { text: "Seeing the future of a situation before it unfolds.", archetype: "starseeder" },
+      { text: "Remembering what matters when everyone else forgets.", archetype: "rootkeeper" },
+      { text: "Making the complicated feel simple and navigable.", archetype: "bridgewalker" },
+      { text: "Holding space without needing anything back.", archetype: "hollowbone" },
+      { text: "Saying the thing nobody else will say.", archetype: "firebringer" },
+      { text: "Turning broken things - including people - into something whole.", archetype: "weaverhand" }
+    ]
+  },
+  {
+    text: "What's your relationship with belonging?",
+    options: [
+      { text: "I carry a sense of home inside me - I bring it wherever I go.", archetype: "rootkeeper" },
+      { text: "I belong everywhere a little, nowhere completely.", archetype: "bridgewalker" },
+      { text: "I create belonging for others; mine is more complicated.", archetype: "hollowbone" },
+      { text: "I challenge the groups I'm in - belonging feels earned.", archetype: "firebringer" },
+      { text: "I weave people together; the web is my home.", archetype: "weaverhand" },
+      { text: "I'm here to change what belonging even means.", archetype: "starseeder" }
+    ]
+  },
+  {
+    text: "Where does your shadow most reliably show up?",
+    options: [
+      { text: "I overgive until I'm empty, then disappear.", archetype: "hollowbone" },
+      { text: "I blow things up when I could have just said 'this isn't working.'", archetype: "firebringer" },
+      { text: "I start things I don't finish - the vision is clearer than the follow-through.", archetype: "starseeder" },
+      { text: "I hold on too long - people, places, identities.", archetype: "rootkeeper" },
+      { text: "I'm everywhere and nowhere - commitment feels like a cage.", archetype: "bridgewalker" },
+      { text: "I hold everyone else together while quietly falling apart.", archetype: "weaverhand" }
+    ]
+  },
+  {
+    text: "In a crisis, you become...",
+    options: [
+      { text: "The calm one - you've seen worse, in this life or another.", archetype: "rootkeeper" },
+      { text: "The one asking 'what is this actually trying to teach us?'", archetype: "starseeder" },
+      { text: "The translator - making sense of the chaos for everyone else.", archetype: "bridgewalker" },
+      { text: "The container - you absorb the room so others can breathe.", archetype: "hollowbone" },
+      { text: "The one who acts - cuts through, decides, moves.", archetype: "firebringer" },
+      { text: "The one finding what can be salvaged and rebuilt.", archetype: "weaverhand" }
+    ]
+  },
+  {
+    text: "What kind of depth do you naturally create?",
+    options: [
+      { text: "Visionary depth - you pull people into a bigger story.", archetype: "starseeder" },
+      { text: "Ancestral depth - you connect people to what came before.", archetype: "rootkeeper" },
+      { text: "Liminal depth - you help people cross thresholds.", archetype: "bridgewalker" },
+      { text: "Devotional depth - you make people feel held in something larger.", archetype: "hollowbone" },
+      { text: "Confrontational depth - you crack open what was sealed.", archetype: "firebringer" },
+      { text: "Relational depth - you find the thread that connects everything.", archetype: "weaverhand" }
+    ]
+  },
+  {
+    text: "What do you most need to receive from others - and rarely do?",
+    options: [
+      { text: "For someone to match my vision instead of shrinking it.", archetype: "starseeder" },
+      { text: "Permission to let go of what I've been carrying.", archetype: "rootkeeper" },
+      { text: "A place where I don't have to translate myself.", archetype: "bridgewalker" },
+      { text: "For someone to hold space for me, not just receive mine.", archetype: "hollowbone" },
+      { text: "For someone to not flinch when I tell the truth.", archetype: "firebringer" },
+      { text: "For someone to see how much I carry and say 'let me take some of that.'", archetype: "weaverhand" }
+    ]
+  }
+];
+
+const archetypes = {
+  starseeder: {
+    name: "The Starseeder",
+    element: "Condor Medicine · Sky · Vision",
+    sigil: "✦",
+    tagline: "You didn't just arrive - you landed. You carry codes most people aren't ready for, and you know it. The question isn't whether you have vision. It's whether you've learned to let it breathe.",
+    shadow: "Drops cosmic downloads on people who asked for directions. Spiritually mansplains. Has seventeen unfinished 'revolutionary' projects and a very good reason why each one stopped.",
+    gift: "Catalyzes awakening just by being in the room. Sees what's possible before anyone else can, and carries enough conviction to make the impossible feel inevitable.",
+    siddhi: "Becomes a living transmission - no words needed. Presence alone shifts timelines. The vision and the visionary dissolve into one field.",
+    need: "For someone to match my vision instead of shrinking it.",
+    spiritMessage: "Condor speaks: 'Stop circling the mountain. Land. The codes you carry are not meant to be held at altitude forever - they are seeds. And seeds only activate in soil. Come down. Plant one thing. Watch it grow.'",
+    mantra: "I trust the ground as much as the sky. One vision, fully landed, changes more than ten visions carried alone.",
+    workingElement: "Air - but grounded. Light a stick of palo santo or incense and watch the smoke rise, then dissipate. Your medicine moves like that - it needs to be released, not held. Let something go today.",
+    cta: "You're wired to see what others can't. The next layer of your work is learning to land those visions - not just carry them. Let's map your full archetypal signature."
+  },
+  rootkeeper: {
+    name: "The Rootkeeper",
+    element: "Serpent Medicine · Earth · Memory",
+    sigil: "🐍",
+    tagline: "You remember things nobody told you. You carry something old - in your body, your knowing, your instinct for what must not be lost. The work is learning when to hold and when to finally let the river move.",
+    shadow: "Holds onto what's already dead and calls it 'honoring lineage.' Confuses loyalty with stagnation. Secretly terrified of what's next - because next means something beloved has to end.",
+    gift: "Carries ancestral medicine that others can't access without a guide. Knows what must be preserved so the new has something to grow from. The living archive.",
+    siddhi: "Becomes the bridge between worlds - past and future collapse into a single breath. No longer carrying the ancestors; becoming a clear channel for what they always wanted to say.",
+    need: "Permission to let go of what I've been carrying.",
+    spiritMessage: "Serpent speaks: 'I do not mourn my old skin. I leave it on the earth as an offering and move forward, lighter, new. You have been wearing yours long past the season. It is not betrayal to shed what no longer fits. It is the most ancient form of respect.'",
+    mantra: "I honor what was by becoming what's next. Letting go is how I carry them forward.",
+    workingElement: "Earth. Place both hands flat on the ground - outside, or on a wooden floor. Breathe into your belly. Feel what is solid beneath you. Ask: what am I ready to release back to the earth? Stay until something answers.",
+    cta: "Your roots run deep - deeper than most people can track. Understanding your lineage codes is the first step to moving freely. Let's go into the depths together."
+  },
+  bridgewalker: {
+    name: "The Bridgewalker",
+    element: "Spider Medicine · Liminal Space · Translation",
+    sigil: "🕸",
+    tagline: "You've always lived between worlds. You speak multiple languages - not just literally. You make the mystical practical and the practical sacred. The trap is staying in the between so long you forget to land.",
+    shadow: "Belongs everywhere, lands nowhere. Keeps one foot out the door and calls it 'freedom.' The real move is staying long enough to find out what happens when you commit.",
+    gift: "Translates the unseen into form. Makes the mystical practical. The ultimate interpreter - you help people cross thresholds they didn't even know they were standing in front of.",
+    siddhi: "Becomes the weave itself - not walking between worlds but holding them together. The bridge becomes the destination. Pure presence in the liminal.",
+    need: "A place where I don't have to translate myself.",
+    spiritMessage: "Spider speaks: 'I do not float between threads - I am the thread. I did not weave this web to escape into it. I wove it to live in it. You have spent so long building bridges for others. It is time to build one toward yourself and actually cross it.'",
+    mantra: "I am not between worlds. I am the meeting point. My presence is the bridge.",
+    workingElement: "Water. Sit by any water - ocean, river, even a bowl. Watch how it moves between states: still, rippling, flowing. You are that. Let water remind you that fluidity and rootedness are not opposites.",
+    cta: "You are fluent in a language most people are still learning. Let's name the full spectrum of what you carry - and what it's asking to become."
+  },
+  hollowbone: {
+    name: "The Hollowbone",
+    element: "Whale Medicine · Devotion · Channeling",
+    sigil: "🌊",
+    tagline: "You are a vessel. When clear, what moves through you changes rooms, relationships, bloodlines. The work isn't becoming more. It's removing what's blocking the flow - starting with the belief that emptying yourself is the same as mattering.",
+    shadow: "Confuses depletion with devotion. Says yes to everyone and then wonders why they feel invisible. The sacred roast: you've made self-erasure spiritual and called it service.",
+    gift: "Pure channel. When genuinely clear - not performing clearness - what moves through is extraordinary. A rare capacity to hold what others cannot.",
+    siddhi: "Ego dissolves completely - not as collapse, but as arrival. What remains is pure service: effortless, boundless, radiant. The bone so hollow it becomes the instrument.",
+    need: "For someone to hold space for me, not just receive mine.",
+    spiritMessage: "Whale speaks: 'My song travels thousands of miles through open ocean - not because I force it, but because I am full when I sing it. You have been trying to channel from an empty place and calling it humility. Fill yourself first. The song carries further that way.'",
+    mantra: "I receive as an act of service. My fullness is medicine. I matter when I'm here, not only when I'm useful.",
+    workingElement: "Water and sound. Hum - any tone, eyes closed, one hand on your chest. Feel the vibration in your own body. This is what it means to be held by yourself first. Stay with it for three full breaths.",
+    cta: "You know how to hold others. The question is: who holds you? Let's explore what your full capacity looks like when it's also pointed inward."
+  },
+  firebringer: {
+    name: "The Firebringer",
+    element: "Jaguar Medicine · Shadow · Truth",
+    sigil: "🔥",
+    tagline: "You see through illusion the way others breathe. The room shifts when you name what's real. The question has never been whether you have truth to speak - it's whether you trust that the right fire purifies rather than just burns.",
+    shadow: "Mistakes chaos for transformation. Burns things down, calls it truth, leaves before the rebuild. Has a reputation for being 'a lot' - which is accurate, and also a convenient story that keeps depth at arm's length.",
+    gift: "Sees through illusion instantly. The one person willing to say what everyone else is thinking. Catalyzes real change because they refuse to pretend. The gift of unflinching witnessing.",
+    siddhi: "Becomes fearless love - the fire no longer destroys, it purifies. The jaguar's gaze holds both the shadow and the light without flinching from either. Truth as tenderness.",
+    need: "For someone to not flinch when I tell the truth.",
+    spiritMessage: "Jaguar speaks: 'I do not hunt in chaos. I move in absolute stillness, and then I act with precision. One strike. Not many. You have been burning wide when you could be burning true. Be still first. Then let the fire choose its target.'",
+    mantra: "My truth is most powerful when it is chosen, not unleashed. I am the fire and the one who tends it.",
+    workingElement: "Fire. Light a candle. Sit with it. Watch how controlled flame gives light, warmth, direction. Watch how the same fire, uncontained, destroys. You are not the destruction. You are the light. Let the candle remind you.",
+    cta: "Your fire is medicine - when it's conscious. The shadow work isn't taming the flame. It's learning to choose when to light the match. Let's go into that together."
+  },
+  weaverhand: {
+    name: "The Weaverhand",
+    element: "Hummingbird Medicine · Integration · Joy",
+    sigil: "🌀",
+    tagline: "You find the pattern in the chaos. You turn wounds into wisdom, publicly - and quietly hold the weight of everyone else's becoming. The invitation: to let yourself fall apart long enough to discover you were never the one holding it together.",
+    shadow: "So focused on holding everything together that they never let themselves fall apart - or feel joy. Masterclass in integration. Failing grade in receiving. The sacred roast: you make healing look so graceful that nobody thinks to ask how you're doing.",
+    gift: "Finds the thread that connects everything. Integrates what others can't. The one who shows up after the storm with both a broom and a vision for what this room can become.",
+    siddhi: "Becomes joy itself - the integration so complete that living is the teaching. No longer weaving the web; becoming the quality of aliveness that makes the weave possible.",
+    need: "For someone to see how much I carry and say 'let me take some of that.'",
+    spiritMessage: "Hummingbird speaks: 'I beat my wings 80 times per second not through effort but through joy. I do not work to hover - I delight to hover. You have been weaving from discipline when the real thread is pleasure. Find what makes you light. Weave from there. The pattern will be more beautiful than anything you've forced together.'",
+    mantra: "I weave best when I am also being woven. My joy is not a reward for finishing. It is the material I work with.",
+    workingElement: "Flowers or sweetness - this is hummingbird medicine. Put something beautiful in your space today. Not for anyone else. Buy yourself flowers, eat something you love slowly, put on a song that makes your body move. Let delight be the practice.",
+    cta: "You are a master integrator. The last thing left to integrate is yourself - the part that keeps deferring its own depth. Let's weave that thread in."
+  }
+};
+
+let scores = { starseeder: 0, rootkeeper: 0, bridgewalker: 0, hollowbone: 0, firebringer: 0, weaverhand: 0 };
+let currentQ = 0;
+let selectedOption = null;
+
+function shuffle(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
+function startQuiz() {
+  showScreen('screen-quiz');
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = questions[currentQ];
+  selectedOption = null;
+  document.getElementById('question-counter').textContent = `Question ${currentQ + 1} of ${questions.length}`;
+  document.getElementById('question-text').textContent = q.text;
+  document.getElementById('progress-fill').style.width = `${(currentQ / questions.length) * 100}%`;
+
+  const container = document.getElementById('options-container');
+  container.innerHTML = '';
+  const shuffled = shuffle([...q.options]);
+  shuffled.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option';
+    btn.textContent = opt.text;
+    btn.dataset.archetype = opt.archetype;
+    btn.addEventListener('click', () => selectOption(btn, opt.archetype));
+    container.appendChild(btn);
+  });
+}
+
+function selectOption(btn, archetype) {
+  document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+  btn.classList.add('selected');
+  selectedOption = archetype;
+
+  setTimeout(() => {
+    scores[archetype]++;
+    currentQ++;
+    if (currentQ < questions.length) {
+      renderQuestion();
+    } else {
+      showResults();
+    }
+  }, 400);
+}
+
+function showResults() {
+  showScreen('screen-loading');
+  setTimeout(() => {
+    const sorted = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+    const topScore = sorted[0][1];
+    const tied = sorted.filter(([k, v]) => v === topScore);
+
+    if (tied.length > 1) {
+      // Show tiebreaker for top 2
+      renderTiebreaker(tied[0][0], tied[1][0]);
+    } else {
+      renderResult(sorted[0][0]);
+    }
+  }, 2200);
+}
+
+function renderTiebreaker(keyA, keyB) {
+  const a = archetypes[keyA];
+  const b = archetypes[keyB];
+  const container = document.getElementById('tiebreaker-options');
+  container.innerHTML = '';
+
+  [{ key: keyA, data: a }, { key: keyB, data: b }].forEach(({ key, data }) => {
+    const card = document.createElement('button');
+    card.style.cssText = `
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(201,168,76,0.25);
+      border-radius: 12px;
+      padding: 1.5rem;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.25s ease;
+      font-family: 'Crimson Pro', serif;
+      color: var(--parchment);
+      width: 100%;
+    `;
+    card.innerHTML = `
+      <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:0.75rem;">
+        <span style="font-size:2rem;">${data.sigil}</span>
+        <div>
+          <div style="font-family:'Cinzel Decorative',serif; font-size:0.65rem; letter-spacing:0.15em; color:var(--gold); opacity:0.7; text-transform:uppercase; margin-bottom:0.2rem;">Archetype</div>
+          <div style="font-family:'Cinzel Decorative',serif; font-size:1rem; color:var(--gold);">${data.name}</div>
+        </div>
+      </div>
+      <div style="font-style:italic; color:var(--mist); font-size:0.9rem; margin-bottom:0.75rem;">${data.element}</div>
+      <div style="font-size:1rem; line-height:1.6; color:rgba(245,240,232,0.8);">${data.tagline}</div>
+    `;
+    card.addEventListener('mouseenter', () => {
+      card.style.borderColor = 'rgba(201,168,76,0.7)';
+      card.style.background = 'rgba(201,168,76,0.07)';
+      card.style.transform = 'translateY(-2px)';
+    });
+    card.addEventListener('mouseleave', () => {
+      card.style.borderColor = 'rgba(201,168,76,0.25)';
+      card.style.background = 'rgba(255,255,255,0.03)';
+      card.style.transform = 'translateY(0)';
+    });
+    card.addEventListener('click', () => renderResult(key));
+    container.appendChild(card);
+  });
+
+  showScreen('screen-tiebreaker');
+}
+
+function renderResult(winner) {
+  const data = archetypes[winner];
+  document.getElementById('result-sigil').textContent = data.sigil;
+  document.getElementById('result-name').textContent = data.name;
+  document.getElementById('result-element').textContent = data.element;
+  document.getElementById('result-tagline').textContent = data.tagline;
+  document.getElementById('result-shadow').textContent = data.shadow;
+  document.getElementById('result-gift').textContent = data.gift;
+  document.getElementById('result-siddhi').textContent = data.siddhi;
+  document.getElementById('result-need').textContent = data.need;
+  document.getElementById('result-spirit').textContent = data.spiritMessage;
+  document.getElementById('result-mantra').textContent = data.mantra;
+  document.getElementById('result-working-element').textContent = data.workingElement;
+  document.getElementById('result-cta').textContent = data.cta;
+  showScreen('screen-result');
+}
+
+function retakeQuiz() {
+  scores = { starseeder: 0, rootkeeper: 0, bridgewalker: 0, hollowbone: 0, firebringer: 0, weaverhand: 0 };
+  currentQ = 0;
+  selectedOption = null;
+  showScreen('screen-quiz');
+  renderQuestion();
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+</script>
+</body>
+</html>
