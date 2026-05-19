@@ -35,7 +35,6 @@
     -webkit-overflow-scrolling: touch;
   }
 
-  /* Star field */
   body::before {
     content: '';
     position: fixed;
@@ -58,7 +57,6 @@
     z-index: 0;
   }
 
-  /* Nebula glow */
   body::after {
     content: '';
     position: fixed;
@@ -79,13 +77,58 @@
     padding: 2rem 1.5rem 4rem;
   }
 
-  /* SCREENS */
   .screen { display: none; animation: fadeIn 0.6s ease; }
   .screen.active { display: block; }
 
   @keyframes fadeIn {
     from { opacity: 0; transform: translateY(16px); }
     to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* EMAIL GATE SCREEN */
+  .gate-label {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.25em;
+    color: var(--gold);
+    opacity: 0.7;
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 0.75rem;
+  }
+
+  .gate-input {
+    width: 100%;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 8px;
+    padding: 0.9rem 1rem;
+    color: var(--parchment);
+    font-family: 'Crimson Pro', serif;
+    font-size: 1rem;
+    margin-bottom: 0.85rem;
+    outline: none;
+    transition: border-color 0.25s;
+  }
+
+  .gate-input::placeholder { color: var(--mist); opacity: 0.6; }
+  .gate-input:focus { border-color: var(--gold); }
+
+  .gate-note {
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--mist);
+    font-style: italic;
+    margin-top: 1rem;
+    opacity: 0.7;
+  }
+
+  .gate-error {
+    color: #e07070;
+    font-size: 0.9rem;
+    text-align: center;
+    margin-top: 0.5rem;
+    display: none;
   }
 
   /* INTRO SCREEN */
@@ -143,7 +186,6 @@
   .intro-text p { margin-bottom: 0.8rem; }
   .intro-text p:last-child { margin-bottom: 0; }
 
-  /* DIVIDER */
   .divider {
     display: flex;
     align-items: center;
@@ -162,7 +204,6 @@
     opacity: 0.5;
   }
 
-  /* BUTTONS */
   .btn-primary {
     display: block;
     width: 100%;
@@ -183,6 +224,12 @@
   .btn-primary:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 30px rgba(201,168,76,0.4);
+  }
+
+  .btn-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
   }
 
   /* QUIZ SCREEN */
@@ -442,39 +489,6 @@
     border-color: var(--gold);
   }
 
-  /* EMAIL CAPTURE */
-  .email-block {
-    margin-bottom: 1.5rem;
-  }
-
-  .email-block input {
-    width: 100%;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(201,168,76,0.3);
-    border-radius: 8px;
-    padding: 0.9rem 1rem;
-    color: var(--parchment);
-    font-family: 'Crimson Pro', serif;
-    font-size: 1rem;
-    margin-bottom: 0.75rem;
-    outline: none;
-    transition: border-color 0.25s;
-  }
-
-  .email-block input::placeholder { color: var(--mist); opacity: 0.6; }
-  .email-block input:focus { border-color: var(--gold); }
-
-  /* Confirmation */
-  .email-confirm {
-    display: none;
-    text-align: center;
-    color: #7dc898;
-    font-size: 0.95rem;
-    padding: 0.75rem;
-    font-style: italic;
-  }
-
-  /* Loading */
   .loading {
     text-align: center;
     padding: 4rem 2rem;
@@ -503,8 +517,8 @@
 <body>
 <div class="container">
 
-  <!-- INTRO SCREEN -->
-  <div class="screen active" id="screen-intro">
+  <!-- EMAIL GATE SCREEN -->
+  <div class="screen active" id="screen-gate">
     <div class="intro-symbol">
       <div class="mandala">
         <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -532,7 +546,14 @@
 
     <div class="divider">✦</div>
 
-    <button class="btn-primary" onclick="startQuiz()">BEGIN THE INQUIRY</button>
+    <div class="gate-label">Enter your details to begin</div>
+
+    <input class="gate-input" type="text" id="gate-name" placeholder="Your first name" autocomplete="given-name" />
+    <input class="gate-input" type="email" id="gate-email" placeholder="Your email address" autocomplete="email" />
+
+    <button class="btn-primary" id="gate-btn" onclick="submitGate()">BEGIN THE INQUIRY</button>
+    <div class="gate-error" id="gate-error">Please enter your name and a valid email to continue.</div>
+    <p class="gate-note">Your results will be sent to this address. No spam, ever.</p>
   </div>
 
   <!-- QUIZ SCREEN -->
@@ -632,6 +653,47 @@
 </div>
 
 <script>
+const FORMSPREE_URL = 'https://formspree.io/f/mjgzvzer';
+
+let userName = '';
+let userEmail = '';
+
+async function submitGate() {
+  const nameInput = document.getElementById('gate-name');
+  const emailInput = document.getElementById('gate-email');
+  const errorEl = document.getElementById('gate-error');
+  const btn = document.getElementById('gate-btn');
+
+  const name = nameInput.value.trim();
+  const email = emailInput.value.trim();
+  const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+  if (!name || !emailValid) {
+    errorEl.style.display = 'block';
+    return;
+  }
+
+  errorEl.style.display = 'none';
+  userName = name;
+  userEmail = email;
+
+  btn.disabled = true;
+  btn.textContent = 'Opening the portal...';
+
+  // Submit to Formspree (non-blocking - quiz starts regardless)
+  try {
+    await fetch(FORMSPREE_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ name, email, source: 'Sacred Archetype Quiz' })
+    });
+  } catch (e) {
+    // Fail silently - don't block the quiz
+  }
+
+  startQuiz();
+}
+
 const questions = [
   {
     text: "When you walk into a room, what's the first thing that happens?",
@@ -802,6 +864,7 @@ const archetypes = {
 let scores = { starseeder: 0, rootkeeper: 0, bridgewalker: 0, hollowbone: 0, firebringer: 0, weaverhand: 0 };
 let currentQ = 0;
 let selectedOption = null;
+let finalArchetype = '';
 
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
@@ -826,7 +889,7 @@ function renderQuestion() {
   const container = document.getElementById('options-container');
   container.innerHTML = '';
   const shuffled = shuffle([...q.options]);
-  shuffled.forEach((opt, i) => {
+  shuffled.forEach((opt) => {
     const btn = document.createElement('button');
     btn.className = 'option';
     btn.textContent = opt.text;
@@ -860,7 +923,6 @@ function showResults() {
     const tied = sorted.filter(([k, v]) => v === topScore);
 
     if (tied.length > 1) {
-      // Show tiebreaker for top 2
       renderTiebreaker(tied[0][0], tied[1][0]);
     } else {
       renderResult(sorted[0][0]);
@@ -921,7 +983,8 @@ function renderTiebreaker(keyA, keyB) {
   showScreen('screen-tiebreaker');
 }
 
-function renderResult(winner) {
+async function renderResult(winner) {
+  finalArchetype = winner;
   const data = archetypes[winner];
   document.getElementById('result-sigil').textContent = data.sigil;
   document.getElementById('result-name').textContent = data.name;
@@ -935,6 +998,23 @@ function renderResult(winner) {
   document.getElementById('result-mantra').textContent = data.mantra;
   document.getElementById('result-working-element').textContent = data.workingElement;
   document.getElementById('result-cta').textContent = data.cta;
+
+  // Send result to Formspree
+  try {
+    await fetch(FORMSPREE_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({
+        name: userName,
+        email: userEmail,
+        archetype: data.name,
+        source: 'Sacred Archetype Quiz - Result'
+      })
+    });
+  } catch (e) {
+    // Fail silently
+  }
+
   showScreen('screen-result');
 }
 
@@ -942,6 +1022,7 @@ function retakeQuiz() {
   scores = { starseeder: 0, rootkeeper: 0, bridgewalker: 0, hollowbone: 0, firebringer: 0, weaverhand: 0 };
   currentQ = 0;
   selectedOption = null;
+  finalArchetype = '';
   showScreen('screen-quiz');
   renderQuestion();
 }
@@ -950,14 +1031,12 @@ function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   window.scrollTo(0, 0);
-  // Notify Carrd parent frame to resize
   setTimeout(() => {
     const height = document.body.scrollHeight;
     window.parent.postMessage({ type: 'resize', height: height }, '*');
   }, 100);
 }
 
-// Auto-resize on load for Carrd
 window.addEventListener('load', () => {
   const height = document.body.scrollHeight;
   window.parent.postMessage({ type: 'resize', height: height }, '*');
