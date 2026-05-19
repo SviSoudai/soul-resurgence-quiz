@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>What's Your Sacred Archetype?</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&display=swap" rel="stylesheet">
+<!-- EmailJS SDK - free tier, 200 emails/month. Sends the reading to the quiz-taker. -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <style>
   html {
     height: 100%;
@@ -609,6 +611,22 @@
 </div>
 <script>
 const FORMSPREE_URL = 'https://formspree.io/f/mjgzvzer';
+
+// ====================================================================
+// EMAILJS CONFIG — replace these 3 strings after you finish EmailJS setup
+// (emailjs.com → Account/Services/Templates).
+// Until you replace them, the email send will fail silently and the
+// quiz still works; only the user-facing email won't arrive.
+// ====================================================================
+const EMAILJS_PUBLIC_KEY  = '5HjZtPKWKQ9m6huih';   // Account → General → Public Key
+const EMAILJS_SERVICE_ID  = 'service_fw39w05';     // Email Services → your Gmail/Outlook service
+const EMAILJS_TEMPLATE_ID = 'template_3msoupp';    // Email Templates → your template
+
+// Initialize EmailJS if the SDK loaded successfully.
+if (window.emailjs && EMAILJS_PUBLIC_KEY && !EMAILJS_PUBLIC_KEY.startsWith('YOUR_')) {
+  emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+}
+
 let userName = '';
 let userEmail = '';
 let pendingArchetype = null;  // set after quiz/tiebreaker, used by submitReveal -> renderResult
@@ -629,21 +647,58 @@ async function submitReveal() {
   userEmail = email;
   btn.disabled = true;
   btn.textContent = 'Opening your reading...';
-  // Submit name + email + archetype to Formspree (non-blocking - result shows regardless)
+  const reading = (pendingArchetype && archetypes[pendingArchetype]) || {};
+
+  // 1) Capture the lead + full reading in Formspree (your dashboard).
   try {
-    const archetypeName = pendingArchetype && archetypes[pendingArchetype]
-      ? archetypes[pendingArchetype].name : '';
     await fetch(FORMSPREE_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
       body: JSON.stringify({
-        name, email,
-        archetype: archetypeName,
-        source: 'Sacred Archetype Quiz - Result'
+        name,
+        email,
+        archetype:      reading.name           || '',
+        element:        reading.element        || '',
+        sigil:          reading.sigil          || '',
+        tagline:        reading.tagline        || '',
+        shadow:         reading.shadow         || '',
+        gift:           reading.gift           || '',
+        siddhi:         reading.siddhi         || '',
+        need:           reading.need           || '',
+        spiritMessage:  reading.spiritMessage  || '',
+        mantra:         reading.mantra         || '',
+        workingElement: reading.workingElement || '',
+        cta:            reading.cta            || '',
+        source:         'Sacred Archetype Quiz - Result'
       })
     });
   } catch (e) {
     // Fail silently - don't block the reveal
+  }
+
+  // 2) Send the reading to the quiz-taker's inbox via EmailJS.
+  //    Template placeholders must match the keys below: {{to_name}}, {{archetype}}, etc.
+  if (window.emailjs && !EMAILJS_SERVICE_ID.startsWith('YOUR_') && !EMAILJS_TEMPLATE_ID.startsWith('YOUR_')) {
+    try {
+      await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+        to_name:         name,
+        to_email:        email,
+        archetype:       reading.name           || '',
+        element:         reading.element        || '',
+        sigil:           reading.sigil          || '',
+        tagline:         reading.tagline        || '',
+        shadow:          reading.shadow         || '',
+        gift:            reading.gift           || '',
+        siddhi:          reading.siddhi         || '',
+        need:            reading.need           || '',
+        spirit_message:  reading.spiritMessage  || '',
+        mantra:          reading.mantra         || '',
+        working_element: reading.workingElement || '',
+        cta:             reading.cta            || ''
+      });
+    } catch (e) {
+      // Fail silently - don't block the reveal
+    }
   }
   renderResult(pendingArchetype);
 }
