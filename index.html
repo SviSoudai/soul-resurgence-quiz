@@ -4,71 +4,67 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>What's Your Sacred Archetype?</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&display=swap" rel="stylesheet">
 <style>
   html {
     height: 100%;
     scroll-behavior: smooth;
   }
   :root {
-    --ink: #0a0812;
-    --parchment: #f5f0e8;
-    --gold: #c9a84c;
-    --gold-light: #e8d08a;
-    --ember: #c4542a;
-    --slate: #2a2535;
-    --mist: #8b8ba0;
-    --glow: rgba(201,168,76,0.15);
+    /* Carrd-matched palette (svisoudai.carrd.co) */
+    --ink: #1E3329;            /* deep forest base */
+    --ink-deep: #142219;        /* darker forest for cards */
+    --parchment: #EDE3CF;       /* warm off-white body text */
+    --gold: #C9A86A;            /* warm antique gold (headers) */
+    --gold-light: #D8BC85;      /* lighter gold (hover / italic) */
+    --tan: #C2A77E;             /* tan pill button base */
+    --tan-hover: #D4B98F;       /* tan button hover */
+    --tan-text: #2A1F12;        /* dark brown text on tan buttons */
+    --ember: #B8924A;           /* warm bronze accent */
+    --slate: #2A4438;           /* mid forest panel */
+    --mist: #B9AC91;            /* muted parchment */
+    --glow: rgba(201,168,106,0.15);
   }
-
   * { margin: 0; padding: 0; box-sizing: border-box; }
-
   body {
     background: var(--ink);
     color: var(--parchment);
-    font-family: 'Crimson Pro', Georgia, serif;
+    font-family: 'Cormorant Garamond', 'Cormorant', Garamond, Georgia, serif;
     min-height: 100vh;
     height: auto;
     overflow-x: hidden;
     overflow-y: auto;
     position: relative;
     -webkit-overflow-scrolling: touch;
+    letter-spacing: 0.01em;
+    line-height: 1.55;
   }
-
+  /* subtle sacred-geometry overlay (replaces starfield) */
   body::before {
     content: '';
     position: fixed;
     inset: 0;
-    background-image:
-      radial-gradient(1px 1px at 15% 20%, rgba(255,255,255,0.6) 0%, transparent 100%),
-      radial-gradient(1px 1px at 35% 60%, rgba(255,255,255,0.4) 0%, transparent 100%),
-      radial-gradient(1.5px 1.5px at 55% 15%, rgba(255,255,255,0.7) 0%, transparent 100%),
-      radial-gradient(1px 1px at 75% 45%, rgba(255,255,255,0.5) 0%, transparent 100%),
-      radial-gradient(1px 1px at 90% 80%, rgba(255,255,255,0.4) 0%, transparent 100%),
-      radial-gradient(1px 1px at 25% 85%, rgba(255,255,255,0.3) 0%, transparent 100%),
-      radial-gradient(1.5px 1.5px at 65% 70%, rgba(255,255,255,0.6) 0%, transparent 100%),
-      radial-gradient(1px 1px at 45% 35%, rgba(255,255,255,0.4) 0%, transparent 100%),
-      radial-gradient(1px 1px at 80% 10%, rgba(255,255,255,0.5) 0%, transparent 100%),
-      radial-gradient(1px 1px at 10% 50%, rgba(255,255,255,0.3) 0%, transparent 100%),
-      radial-gradient(1px 1px at 50% 90%, rgba(255,255,255,0.4) 0%, transparent 100%),
-      radial-gradient(1px 1px at 20% 40%, rgba(201,168,76,0.3) 0%, transparent 100%),
-      radial-gradient(1px 1px at 70% 25%, rgba(201,168,76,0.2) 0%, transparent 100%);
     pointer-events: none;
     z-index: 0;
+    opacity: 0.08;
+    background-image:
+      repeating-linear-gradient(60deg,  rgba(201,168,106,0.6) 0 1px, transparent 1px 48px),
+      repeating-linear-gradient(-60deg, rgba(201,168,106,0.6) 0 1px, transparent 1px 48px);
+    -webkit-mask-image: radial-gradient(ellipse at center, black 35%, transparent 78%);
+            mask-image: radial-gradient(ellipse at center, black 35%, transparent 78%);
   }
-
+  /* warm forest glows (replaces purple/blue nebulas) */
   body::after {
     content: '';
     position: fixed;
     inset: 0;
-    background:
-      radial-gradient(ellipse 60% 40% at 20% 30%, rgba(80,40,120,0.25) 0%, transparent 70%),
-      radial-gradient(ellipse 50% 60% at 80% 70%, rgba(40,80,120,0.2) 0%, transparent 70%),
-      radial-gradient(ellipse 40% 30% at 50% 50%, rgba(120,60,40,0.1) 0%, transparent 70%);
     pointer-events: none;
     z-index: 0;
+    background:
+      radial-gradient(ellipse 60% 40% at 20% 30%, rgba(54,88,74,0.45) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 60% at 80% 70%, rgba(201,168,106,0.10) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 30% at 50% 50%, rgba(42,68,56,0.35) 0%, transparent 70%);
   }
-
   .container {
     position: relative;
     z-index: 1;
@@ -76,68 +72,60 @@
     margin: 0 auto;
     padding: 2rem 1.5rem 4rem;
   }
-
   .screen { display: none; animation: fadeIn 0.6s ease; }
   .screen.active { display: block; }
-
   @keyframes fadeIn {
     from { opacity: 0; transform: translateY(16px); }
     to { opacity: 1; transform: translateY(0); }
   }
-
   /* EMAIL GATE SCREEN */
   .gate-label {
-    font-family: 'Cinzel Decorative', serif;
-    font-size: 0.6rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.72rem;
     letter-spacing: 0.25em;
     color: var(--gold);
-    opacity: 0.7;
+    opacity: 0.85;
     text-transform: uppercase;
     text-align: center;
     margin-bottom: 0.75rem;
+    font-weight: 600;
   }
-
   .gate-input {
     width: 100%;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(201,168,76,0.3);
-    border-radius: 8px;
+    background: rgba(54,88,74,0.30);
+    border: 1px solid rgba(201,168,106,0.35);
+    border-radius: 10px;
     padding: 0.9rem 1rem;
     color: var(--parchment);
-    font-family: 'Crimson Pro', serif;
-    font-size: 1rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.05rem;
     margin-bottom: 0.85rem;
     outline: none;
-    transition: border-color 0.25s;
+    transition: border-color 0.25s, background 0.25s;
   }
-
-  .gate-input::placeholder { color: var(--mist); opacity: 0.6; }
-  .gate-input:focus { border-color: var(--gold); }
-
+  .gate-input::placeholder { color: var(--mist); opacity: 0.7; }
+  .gate-input:focus { border-color: var(--gold); background: rgba(54,88,74,0.45); }
   .gate-note {
     text-align: center;
-    font-size: 0.85rem;
+    font-size: 0.95rem;
     color: var(--mist);
     font-style: italic;
     margin-top: 1rem;
-    opacity: 0.7;
+    opacity: 0.85;
   }
-
   .gate-error {
     color: #e07070;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     text-align: center;
     margin-top: 0.5rem;
     display: none;
   }
-
   /* INTRO SCREEN */
   .intro-symbol {
     text-align: center;
     margin-bottom: 2rem;
     padding-top: 2rem;
   }
-
   .mandala {
     width: 90px;
     height: 90px;
@@ -145,55 +133,50 @@
     position: relative;
     animation: slowSpin 30s linear infinite;
   }
-
   @keyframes slowSpin {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
   }
-
   .mandala svg { width: 100%; height: 100%; }
-
   h1 {
-    font-family: 'Cinzel Decorative', serif;
-    font-size: clamp(1.4rem, 5vw, 2rem);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.7rem, 5.5vw, 2.4rem);
+    font-weight: 600;
     color: var(--gold);
     text-align: center;
-    line-height: 1.3;
+    line-height: 1.2;
     letter-spacing: 0.02em;
     margin-bottom: 0.5rem;
   }
-
   .subtitle {
     text-align: center;
-    color: var(--mist);
-    font-size: 1.05rem;
+    color: var(--gold-light);
+    font-size: 1.15rem;
     font-style: italic;
+    font-weight: 400;
     margin-bottom: 2.5rem;
-    letter-spacing: 0.03em;
+    letter-spacing: 0.02em;
   }
-
   .intro-text {
-    background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(201,168,76,0.2);
+    background: rgba(20, 36, 28, 0.55);
+    border: 1px solid rgba(201,168,106,0.22);
     border-radius: 12px;
     padding: 1.5rem;
     margin-bottom: 2rem;
-    font-size: 1.05rem;
-    line-height: 1.75;
-    color: rgba(245,240,232,0.85);
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: var(--parchment);
   }
-
-  .intro-text p { margin-bottom: 0.8rem; }
+  .intro-text p { margin-bottom: 0.85rem; }
   .intro-text p:last-child { margin-bottom: 0; }
-
   .divider {
     display: flex;
     align-items: center;
     gap: 1rem;
     margin: 1.5rem 0;
     color: var(--gold);
-    opacity: 0.4;
-    font-size: 0.7rem;
+    opacity: 0.5;
+    font-size: 0.85rem;
     letter-spacing: 0.15em;
   }
   .divider::before, .divider::after {
@@ -203,92 +186,87 @@
     background: var(--gold);
     opacity: 0.5;
   }
-
+  /* PRIMARY BUTTON — Carrd tan pill */
   .btn-primary {
     display: block;
     width: 100%;
     padding: 1rem 2rem;
-    background: linear-gradient(135deg, var(--gold) 0%, #a07830 100%);
-    color: var(--ink);
-    font-family: 'Cinzel Decorative', serif;
-    font-size: 0.85rem;
-    font-weight: 700;
+    min-height: 52px;
+    background: var(--tan);
+    color: var(--tan-text);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.05rem;
+    font-weight: 600;
     letter-spacing: 0.08em;
     border: none;
-    border-radius: 8px;
+    border-radius: 999px;
     cursor: pointer;
     transition: all 0.3s ease;
     text-transform: uppercase;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.28);
   }
-
   .btn-primary:hover {
+    background: var(--tan-hover);
     transform: translateY(-2px);
-    box-shadow: 0 8px 30px rgba(201,168,76,0.4);
+    box-shadow: 0 8px 28px rgba(201,168,106,0.35);
   }
-
   .btn-primary:disabled {
     opacity: 0.6;
     cursor: not-allowed;
     transform: none;
   }
-
   /* QUIZ SCREEN */
   .progress-bar {
     width: 100%;
-    height: 2px;
-    background: rgba(255,255,255,0.08);
+    height: 3px;
+    background: rgba(201,168,106,0.15);
     border-radius: 2px;
     margin-bottom: 2.5rem;
     overflow: hidden;
   }
-
   .progress-fill {
     height: 100%;
-    background: linear-gradient(90deg, var(--gold), var(--gold-light));
+    background: linear-gradient(90deg, var(--gold), var(--tan));
     border-radius: 2px;
     transition: width 0.5s ease;
   }
-
   .question-counter {
-    font-family: 'Cinzel Decorative', serif;
-    font-size: 0.65rem;
-    letter-spacing: 0.2em;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.22em;
     color: var(--gold);
-    opacity: 0.6;
+    opacity: 0.85;
     margin-bottom: 0.75rem;
     text-transform: uppercase;
+    font-weight: 600;
   }
-
   .question-text {
-    font-size: clamp(1.15rem, 3.5vw, 1.4rem);
-    line-height: 1.55;
+    font-size: clamp(1.25rem, 3.8vw, 1.55rem);
+    line-height: 1.5;
     color: var(--parchment);
     margin-bottom: 2rem;
-    font-weight: 300;
+    font-weight: 400;
   }
-
   .options {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
   }
-
   .option {
-    background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 10px;
+    background: rgba(54, 88, 74, 0.30);
+    border: 1px solid rgba(201,168,106,0.22);
+    border-radius: 12px;
     padding: 1rem 1.25rem;
     cursor: pointer;
     transition: all 0.25s ease;
-    font-size: 1rem;
+    font-size: 1.08rem;
     line-height: 1.5;
-    color: rgba(245,240,232,0.8);
+    color: var(--parchment);
     text-align: left;
-    font-family: 'Crimson Pro', serif;
+    font-family: 'Cormorant Garamond', serif;
     position: relative;
     overflow: hidden;
   }
-
   .option::before {
     content: '';
     position: absolute;
@@ -297,217 +275,193 @@
     opacity: 0;
     transition: opacity 0.25s ease;
   }
-
   .option:hover {
-    border-color: rgba(201,168,76,0.5);
-    color: var(--parchment);
+    border-color: var(--gold);
+    background: rgba(201,168,106,0.10);
     transform: translateX(4px);
   }
-
   .option:hover::before { opacity: 1; }
-
   .option.selected {
     border-color: var(--gold);
-    background: rgba(201,168,76,0.1);
+    background: rgba(201,168,106,0.16);
     color: var(--gold-light);
   }
-
   .option.selected::before { opacity: 1; }
-
   /* RESULT SCREEN */
   .result-header {
     text-align: center;
     padding: 2rem 0 1.5rem;
     position: relative;
   }
-
   .archetype-sigil {
     font-size: 3.5rem;
     margin-bottom: 1rem;
     display: block;
     animation: pulseGlow 3s ease-in-out infinite;
   }
-
   @keyframes pulseGlow {
-    0%, 100% { filter: drop-shadow(0 0 8px rgba(201,168,76,0.4)); }
-    50% { filter: drop-shadow(0 0 20px rgba(201,168,76,0.8)); }
+    0%, 100% { filter: drop-shadow(0 0 8px rgba(201,168,106,0.4)); }
+    50% { filter: drop-shadow(0 0 20px rgba(201,168,106,0.8)); }
   }
-
   .archetype-label {
-    font-family: 'Cinzel Decorative', serif;
-    font-size: 0.7rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.8rem;
     letter-spacing: 0.25em;
     color: var(--gold);
-    opacity: 0.7;
+    opacity: 0.9;
     text-transform: uppercase;
     margin-bottom: 0.5rem;
+    font-weight: 600;
   }
-
   .archetype-name {
-    font-family: 'Cinzel Decorative', serif;
-    font-size: clamp(1.6rem, 6vw, 2.4rem);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.9rem, 6.4vw, 2.8rem);
+    font-weight: 600;
     color: var(--gold);
-    line-height: 1.2;
+    line-height: 1.15;
     margin-bottom: 0.3rem;
   }
-
   .archetype-element {
     font-style: italic;
-    color: var(--mist);
-    font-size: 1rem;
+    color: var(--gold-light);
+    font-size: 1.1rem;
     margin-bottom: 1.5rem;
   }
-
   .tagline {
-    font-size: 1.15rem;
-    line-height: 1.65;
-    color: rgba(245,240,232,0.9);
+    font-size: 1.2rem;
+    line-height: 1.7;
+    color: var(--parchment);
     font-style: italic;
     padding: 1.25rem 1.5rem;
     border-left: 2px solid var(--gold);
     margin-bottom: 2rem;
-    background: rgba(201,168,76,0.05);
+    background: rgba(201,168,106,0.07);
     border-radius: 0 8px 8px 0;
   }
-
   .triad {
     display: flex;
     flex-direction: column;
     gap: 1rem;
     margin-bottom: 2rem;
   }
-
   .triad-card {
-    border-radius: 10px;
+    border-radius: 12px;
     padding: 1.25rem;
     position: relative;
     overflow: hidden;
   }
-
   .triad-card.shadow {
-    background: rgba(30,20,50,0.6);
-    border: 1px solid rgba(196,84,42,0.3);
+    background: rgba(48, 32, 22, 0.55);
+    border: 1px solid rgba(184, 146, 74, 0.35);
   }
-
   .triad-card.gift {
-    background: rgba(20,40,30,0.6);
-    border: 1px solid rgba(80,160,100,0.3);
+    background: rgba(28, 52, 40, 0.55);
+    border: 1px solid rgba(140, 190, 150, 0.30);
   }
-
   .triad-card.siddhi {
-    background: rgba(20,30,50,0.6);
-    border: 1px solid rgba(201,168,76,0.4);
+    background: rgba(36, 48, 38, 0.55);
+    border: 1px solid rgba(201, 168, 106, 0.45);
   }
-
   .triad-label {
-    font-family: 'Cinzel Decorative', serif;
-    font-size: 0.6rem;
-    letter-spacing: 0.2em;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.22em;
     text-transform: uppercase;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.55rem;
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    font-weight: 600;
   }
-
-  .shadow .triad-label { color: #e0785a; }
-  .gift .triad-label { color: #7dc898; }
-  .siddhi .triad-label { color: var(--gold); }
-
+  .shadow  .triad-label { color: #d8a070; }
+  .gift    .triad-label { color: #a8cdb1; }
+  .siddhi  .triad-label { color: var(--gold); }
   .triad-content {
-    font-size: 1rem;
-    line-height: 1.6;
-    color: rgba(245,240,232,0.85);
+    font-size: 1.05rem;
+    line-height: 1.65;
+    color: var(--parchment);
   }
-
   .need-card {
-    background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 10px;
+    background: rgba(20, 36, 28, 0.55);
+    border: 1px solid rgba(201,168,106,0.22);
+    border-radius: 12px;
     padding: 1.25rem;
     margin-bottom: 2rem;
   }
-
   .need-label {
-    font-family: 'Cinzel Decorative', serif;
-    font-size: 0.6rem;
-    letter-spacing: 0.2em;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.22em;
     text-transform: uppercase;
     color: var(--mist);
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.55rem;
+    font-weight: 600;
   }
-
   .need-content {
-    font-size: 1rem;
-    line-height: 1.6;
-    color: rgba(245,240,232,0.8);
+    font-size: 1.05rem;
+    line-height: 1.65;
+    color: var(--parchment);
     font-style: italic;
   }
-
   .cta-block {
-    background: linear-gradient(135deg, rgba(201,168,76,0.1), rgba(80,40,120,0.1));
-    border: 1px solid rgba(201,168,76,0.25);
-    border-radius: 12px;
+    background: linear-gradient(135deg, rgba(201,168,106,0.12), rgba(54,88,74,0.25));
+    border: 1px solid rgba(201,168,106,0.30);
+    border-radius: 14px;
     padding: 1.75rem 1.5rem;
     text-align: center;
     margin-bottom: 1.5rem;
   }
-
   .cta-block h3 {
-    font-family: 'Cinzel Decorative', serif;
-    font-size: 0.85rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem;
     color: var(--gold);
     margin-bottom: 0.75rem;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.04em;
+    font-weight: 600;
   }
-
   .cta-block p {
-    font-size: 1rem;
+    font-size: 1.05rem;
     line-height: 1.65;
-    color: rgba(245,240,232,0.8);
+    color: var(--parchment);
     margin-bottom: 1.25rem;
   }
-
   .btn-retake {
     background: transparent;
-    border: 1px solid rgba(201,168,76,0.4);
+    border: 1px solid rgba(201,168,106,0.45);
     color: var(--gold);
-    font-family: 'Cinzel Decorative', serif;
-    font-size: 0.65rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.85rem;
     letter-spacing: 0.15em;
     text-transform: uppercase;
-    padding: 0.75rem 2rem;
-    border-radius: 6px;
+    padding: 0.85rem 2rem;
+    border-radius: 999px;
     cursor: pointer;
     transition: all 0.3s ease;
     width: 100%;
     margin-top: 1rem;
+    font-weight: 600;
   }
-
   .btn-retake:hover {
-    background: rgba(201,168,76,0.1);
+    background: rgba(201,168,106,0.10);
     border-color: var(--gold);
   }
-
   .loading {
     text-align: center;
     padding: 4rem 2rem;
   }
-
   .loading-sigil {
     font-size: 3rem;
+    color: var(--gold);
     animation: slowSpin 4s linear infinite;
     display: block;
     margin-bottom: 1rem;
   }
-
   .loading-text {
-    color: var(--mist);
+    color: var(--gold-light);
     font-style: italic;
-    font-size: 1.05rem;
+    font-size: 1.15rem;
     animation: pulse 2s ease-in-out infinite;
   }
-
   @keyframes pulse {
     0%, 100% { opacity: 0.5; }
     50% { opacity: 1; }
@@ -516,46 +470,34 @@
 </head>
 <body>
 <div class="container">
-
-  <!-- EMAIL GATE SCREEN -->
-  <div class="screen active" id="screen-gate">
+  <!-- INTRO SCREEN -->
+  <div class="screen active" id="screen-intro">
     <div class="intro-symbol">
       <div class="mandala">
         <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="50" cy="50" r="45" stroke="#c9a84c" stroke-width="0.5" opacity="0.4"/>
-          <circle cx="50" cy="50" r="35" stroke="#c9a84c" stroke-width="0.5" opacity="0.3"/>
-          <circle cx="50" cy="50" r="20" stroke="#c9a84c" stroke-width="0.5" opacity="0.5"/>
-          <polygon points="50,8 58,35 88,35 64,52 73,80 50,63 27,80 36,52 12,35 42,35" fill="none" stroke="#c9a84c" stroke-width="0.8" opacity="0.6"/>
-          <circle cx="50" cy="50" r="5" fill="#c9a84c" opacity="0.7"/>
-          <line x1="50" y1="5" x2="50" y2="95" stroke="#c9a84c" stroke-width="0.3" opacity="0.2"/>
-          <line x1="5" y1="50" x2="95" y2="50" stroke="#c9a84c" stroke-width="0.3" opacity="0.2"/>
-          <line x1="14" y1="14" x2="86" y2="86" stroke="#c9a84c" stroke-width="0.3" opacity="0.2"/>
-          <line x1="86" y1="14" x2="14" y2="86" stroke="#c9a84c" stroke-width="0.3" opacity="0.2"/>
+          <circle cx="50" cy="50" r="45" stroke="#c9a86a" stroke-width="0.5" opacity="0.45"/>
+          <circle cx="50" cy="50" r="35" stroke="#c9a86a" stroke-width="0.5" opacity="0.35"/>
+          <circle cx="50" cy="50" r="20" stroke="#c9a86a" stroke-width="0.5" opacity="0.55"/>
+          <polygon points="50,8 58,35 88,35 64,52 73,80 50,63 27,80 36,52 12,35 42,35" fill="none" stroke="#c9a86a" stroke-width="0.8" opacity="0.65"/>
+          <circle cx="50" cy="50" r="5" fill="#c9a86a" opacity="0.75"/>
+          <line x1="50" y1="5" x2="50" y2="95" stroke="#c9a86a" stroke-width="0.3" opacity="0.25"/>
+          <line x1="5" y1="50" x2="95" y2="50" stroke="#c9a86a" stroke-width="0.3" opacity="0.25"/>
+          <line x1="14" y1="14" x2="86" y2="86" stroke="#c9a86a" stroke-width="0.3" opacity="0.25"/>
+          <line x1="86" y1="14" x2="14" y2="86" stroke="#c9a86a" stroke-width="0.3" opacity="0.25"/>
         </svg>
       </div>
     </div>
-
     <h1>What's Your Sacred Archetype?</h1>
     <p class="subtitle">A shamanic + galactic self-discovery portal</p>
-
     <div class="intro-text">
       <p>You didn't come here by accident.</p>
       <p>Every soul carries a signature - a way of moving through the world, creating depth, and yes, a shadow that shows up right on schedule.</p>
       <p>Seven questions. One archetype. Your shadow, your gift, and what you're actually capable of.</p>
     </div>
-
     <div class="divider">✦</div>
-
-    <div class="gate-label">Enter your details to begin</div>
-
-    <input class="gate-input" type="text" id="gate-name" placeholder="Your first name" autocomplete="given-name" />
-    <input class="gate-input" type="email" id="gate-email" placeholder="Your email address" autocomplete="email" />
-
-    <button class="btn-primary" id="gate-btn" onclick="submitGate()">BEGIN THE INQUIRY</button>
-    <div class="gate-error" id="gate-error">Please enter your name and a valid email to continue.</div>
-    <p class="gate-note">Your results will be sent to this address. No spam, ever.</p>
+    <button class="btn-primary" id="intro-btn" onclick="startQuiz()">BEGIN THE INQUIRY</button>
+    <p class="gate-note">Takes about 2 minutes. Trust your first answer.</p>
   </div>
-
   <!-- QUIZ SCREEN -->
   <div class="screen" id="screen-quiz">
     <div class="progress-bar">
@@ -565,7 +507,6 @@
     <div class="question-text" id="question-text"></div>
     <div class="options" id="options-container"></div>
   </div>
-
   <!-- LOADING SCREEN -->
   <div class="screen" id="screen-loading">
     <div class="loading">
@@ -573,18 +514,42 @@
       <p class="loading-text">Reading your signature in the field...</p>
     </div>
   </div>
-
+  <!-- REVEAL / EMAIL GATE SCREEN (shown after quiz + tiebreaker, before result) -->
+  <div class="screen" id="screen-reveal">
+    <div class="intro-symbol">
+      <div class="mandala">
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="50" cy="50" r="45" stroke="#c9a86a" stroke-width="0.5" opacity="0.45"/>
+          <circle cx="50" cy="50" r="35" stroke="#c9a86a" stroke-width="0.5" opacity="0.35"/>
+          <circle cx="50" cy="50" r="20" stroke="#c9a86a" stroke-width="0.5" opacity="0.55"/>
+          <polygon points="50,8 58,35 88,35 64,52 73,80 50,63 27,80 36,52 12,35 42,35" fill="none" stroke="#c9a86a" stroke-width="0.8" opacity="0.65"/>
+          <circle cx="50" cy="50" r="5" fill="#c9a86a" opacity="0.75"/>
+        </svg>
+      </div>
+    </div>
+    <div class="archetype-label" style="text-align:center;">Your reading is ready</div>
+    <h1>Where shall we send it?</h1>
+    <p class="subtitle">Your shadow, gift, siddhi + ritual — waiting.</p>
+    <div class="intro-text">
+      <p>Enter your name and email to reveal your full archetypal signature — including your spirit animal's message, your mantra, and the element you're being asked to work with.</p>
+    </div>
+    <div class="gate-label">Send my reading to</div>
+    <input class="gate-input" type="text" id="reveal-name" placeholder="Your first name" autocomplete="given-name" />
+    <input class="gate-input" type="email" id="reveal-email" placeholder="Your email address" autocomplete="email" />
+    <button class="btn-primary" id="reveal-btn" onclick="submitReveal()">REVEAL MY ARCHETYPE</button>
+    <div class="gate-error" id="reveal-error">Please enter your name and a valid email to continue.</div>
+    <p class="gate-note">No spam, ever. Your results will arrive in your inbox.</p>
+  </div>
   <!-- TIEBREAKER SCREEN -->
   <div class="screen" id="screen-tiebreaker">
     <div style="padding-top: 2rem; text-align: center; margin-bottom: 1.75rem;">
       <div class="archetype-label" style="margin-bottom: 0.6rem;">Two signatures are calling</div>
-      <h1 style="font-size: clamp(1.1rem, 3.5vw, 1.5rem); margin-bottom: 0.75rem;">You carry both. Which one is loudest right now?</h1>
-      <p style="color: rgba(245,240,232,0.7); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem;">Two archetypes scored equally in you. That's not indecision - it's depth.</p>
-      <div style="display:inline-flex; align-items:center; gap:0.4rem; background:rgba(201,168,76,0.12); border:1px solid rgba(201,168,76,0.35); border-radius:20px; padding:0.4rem 1rem; font-family:'Cinzel Decorative',serif; font-size:0.58rem; letter-spacing:0.1em; color:var(--gold); text-transform:uppercase; animation:pulse 2s ease-in-out infinite;">👇 Tap the one that feels most true today to reveal your full reading</div>
+      <h1 style="font-size: clamp(1.3rem, 3.8vw, 1.7rem); margin-bottom: 0.75rem;">You carry both. Which one is loudest right now?</h1>
+      <p style="color: var(--parchment); font-size: 1.05rem; line-height: 1.6; margin-bottom: 1rem; opacity: 0.85;">Two archetypes scored equally in you. That's not indecision - it's depth.</p>
+      <div style="display:inline-flex; align-items:center; gap:0.4rem; background:rgba(201,168,106,0.14); border:1px solid rgba(201,168,106,0.40); border-radius:20px; padding:0.45rem 1rem; font-family:'Cormorant Garamond',serif; font-size:0.72rem; letter-spacing:0.12em; color:var(--gold); text-transform:uppercase; font-weight:600; animation:pulse 2s ease-in-out infinite;">👇 Tap the one that feels most true today to reveal your full reading</div>
     </div>
     <div id="tiebreaker-options" style="display: flex; flex-direction: column; gap: 1rem;"></div>
   </div>
-
   <!-- RESULT SCREEN -->
   <div class="screen" id="screen-result">
     <div class="result-header">
@@ -593,9 +558,7 @@
       <div class="archetype-name" id="result-name"></div>
       <div class="archetype-element" id="result-element"></div>
     </div>
-
     <div class="tagline" id="result-tagline"></div>
-
     <div class="triad">
       <div class="triad-card shadow">
         <div class="triad-label">🜂 Shadow</div>
@@ -610,31 +573,26 @@
         <div class="triad-content" id="result-siddhi"></div>
       </div>
     </div>
-
     <div class="need-card">
       <div class="need-label">What you most need to receive</div>
       <div class="need-content" id="result-need"></div>
     </div>
-
-    <div style="border-radius:10px; padding:1.25rem; margin-bottom:1rem; background:rgba(20,15,40,0.6); border:1px solid rgba(140,100,200,0.3);">
-      <div style="font-family:'Cinzel Decorative',serif; font-size:0.6rem; letter-spacing:0.2em; text-transform:uppercase; color:#b090e0; margin-bottom:0.6rem;">🌀 Message from your Spirit Animal</div>
-      <div id="result-spirit" style="font-size:1rem; line-height:1.7; color:rgba(245,240,232,0.85); font-style:italic; font-family:'Crimson Pro',serif;"></div>
+    <div style="border-radius:12px; padding:1.25rem; margin-bottom:1rem; background:rgba(20,36,28,0.55); border:1px solid rgba(201,168,106,0.25);">
+      <div style="font-family:'Cormorant Garamond',serif; font-size:0.72rem; letter-spacing:0.22em; text-transform:uppercase; color:var(--gold-light); margin-bottom:0.6rem; font-weight:600;">🌀 Message from your Spirit Animal</div>
+      <div id="result-spirit" style="font-size:1.05rem; line-height:1.7; color:var(--parchment); font-style:italic; font-family:'Cormorant Garamond',serif;"></div>
     </div>
-
-    <div style="border-radius:10px; padding:1.25rem; margin-bottom:1rem; background:rgba(15,35,25,0.6); border:1px solid rgba(100,180,130,0.3);">
-      <div style="font-family:'Cinzel Decorative',serif; font-size:0.6rem; letter-spacing:0.2em; text-transform:uppercase; color:#80c8a0; margin-bottom:0.6rem;">◯ Your Mantra</div>
-      <div id="result-mantra" style="font-size:1.05rem; line-height:1.7; color:rgba(245,240,232,0.9); font-style:italic; font-family:'Crimson Pro',serif;"></div>
+    <div style="border-radius:12px; padding:1.25rem; margin-bottom:1rem; background:rgba(28,52,40,0.55); border:1px solid rgba(140,190,150,0.30);">
+      <div style="font-family:'Cormorant Garamond',serif; font-size:0.72rem; letter-spacing:0.22em; text-transform:uppercase; color:#a8cdb1; margin-bottom:0.6rem; font-weight:600;">◯ Your Mantra</div>
+      <div id="result-mantra" style="font-size:1.1rem; line-height:1.7; color:var(--parchment); font-style:italic; font-family:'Cormorant Garamond',serif;"></div>
     </div>
-
-    <div style="border-radius:10px; padding:1.25rem; margin-bottom:2rem; background:rgba(30,20,10,0.6); border:1px solid rgba(201,168,76,0.25);">
-      <div style="font-family:'Cinzel Decorative',serif; font-size:0.6rem; letter-spacing:0.2em; text-transform:uppercase; color:#c9a84c; margin-bottom:0.6rem;">🜁 Element to Work With</div>
-      <div id="result-working-element" style="font-size:1rem; line-height:1.7; color:rgba(245,240,232,0.85); font-family:'Crimson Pro',serif;"></div>
+    <div style="border-radius:12px; padding:1.25rem; margin-bottom:2rem; background:rgba(36,48,38,0.55); border:1px solid rgba(201,168,106,0.35);">
+      <div style="font-family:'Cormorant Garamond',serif; font-size:0.72rem; letter-spacing:0.22em; text-transform:uppercase; color:var(--gold); margin-bottom:0.6rem; font-weight:600;">🜁 Element to Work With</div>
+      <div id="result-working-element" style="font-size:1.05rem; line-height:1.7; color:var(--parchment); font-family:'Cormorant Garamond',serif;"></div>
     </div>
-
     <div class="cta-block">
       <h3>Ready to go deeper?</h3>
       <p id="result-cta"></p>
-      <p style="font-size:0.95rem; color:rgba(245,240,232,0.6); margin-bottom:1.25rem; font-style:italic;">Book a 1:1 call with Svi and go into the full depth of your archetype, shadow work, and what's actually trying to move in your life.</p>
+      <p style="font-size:1rem; color:var(--mist); margin-bottom:1.25rem; font-style:italic;">Book a 1:1 call with Svi and go into the full depth of your archetype, shadow work, and what's actually trying to move in your life.</p>
       <a href="https://wa.me/19546004590?text=Hi%20Svi%2C%20I%20just%20took%20the%20Sacred%20Archetype%20Quiz%20and%20I%27d%20love%20to%20book%20a%201%3A1%20call." target="_blank" style="text-decoration:none;">
         <button class="btn-primary" style="margin-bottom:0.75rem; display:flex; align-items:center; justify-content:center; gap:0.6rem;">
           <span>💬</span> BOOK VIA WHATSAPP
@@ -646,54 +604,49 @@
         </button>
       </a>
     </div>
-
     <button class="btn-retake" onclick="retakeQuiz()" style="margin-top:1rem;">↺ Take it again</button>
   </div>
-
 </div>
-
 <script>
 const FORMSPREE_URL = 'https://formspree.io/f/mjgzvzer';
-
 let userName = '';
 let userEmail = '';
-
-async function submitGate() {
-  const nameInput = document.getElementById('gate-name');
-  const emailInput = document.getElementById('gate-email');
-  const errorEl = document.getElementById('gate-error');
-  const btn = document.getElementById('gate-btn');
-
+let pendingArchetype = null;  // set after quiz/tiebreaker, used by submitReveal -> renderResult
+async function submitReveal() {
+  const nameInput = document.getElementById('reveal-name');
+  const emailInput = document.getElementById('reveal-email');
+  const errorEl = document.getElementById('reveal-error');
+  const btn = document.getElementById('reveal-btn');
   const name = nameInput.value.trim();
   const email = emailInput.value.trim();
   const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-
   if (!name || !emailValid) {
     errorEl.style.display = 'block';
     return;
   }
-
   errorEl.style.display = 'none';
   userName = name;
   userEmail = email;
-
   btn.disabled = true;
-  btn.textContent = 'Opening the portal...';
-
-  // Submit to Formspree (non-blocking - quiz starts regardless)
+  btn.textContent = 'Opening your reading...';
+  // Submit name + email + archetype to Formspree (non-blocking - result shows regardless)
   try {
+    const archetypeName = pendingArchetype && archetypes[pendingArchetype]
+      ? archetypes[pendingArchetype].name : '';
     await fetch(FORMSPREE_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify({ name, email, source: 'Sacred Archetype Quiz' })
+      body: JSON.stringify({
+        name, email,
+        archetype: archetypeName,
+        source: 'Sacred Archetype Quiz - Result'
+      })
     });
   } catch (e) {
-    // Fail silently - don't block the quiz
+    // Fail silently - don't block the reveal
   }
-
-  startQuiz();
+  renderResult(pendingArchetype);
 }
-
 const questions = [
   {
     text: "When you walk into a room, what's the first thing that happens?",
@@ -773,7 +726,6 @@ const questions = [
     ]
   }
 ];
-
 const archetypes = {
   starseeder: {
     name: "The Starseeder",
@@ -860,12 +812,10 @@ const archetypes = {
     cta: "You are a master integrator. The last thing left to integrate is yourself - the part that keeps deferring its own depth. Let's weave that thread in."
   }
 };
-
 let scores = { starseeder: 0, rootkeeper: 0, bridgewalker: 0, hollowbone: 0, firebringer: 0, weaverhand: 0 };
 let currentQ = 0;
 let selectedOption = null;
 let finalArchetype = '';
-
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -873,19 +823,16 @@ function shuffle(array) {
   }
   return array;
 }
-
 function startQuiz() {
   showScreen('screen-quiz');
   renderQuestion();
 }
-
 function renderQuestion() {
   const q = questions[currentQ];
   selectedOption = null;
   document.getElementById('question-counter').textContent = `Question ${currentQ + 1} of ${questions.length}`;
   document.getElementById('question-text').textContent = q.text;
   document.getElementById('progress-fill').style.width = `${(currentQ / questions.length) * 100}%`;
-
   const container = document.getElementById('options-container');
   container.innerHTML = '';
   const shuffled = shuffle([...q.options]);
@@ -898,12 +845,10 @@ function renderQuestion() {
     container.appendChild(btn);
   });
 }
-
 function selectOption(btn, archetype) {
   document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
   btn.classList.add('selected');
   selectedOption = archetype;
-
   setTimeout(() => {
     scores[archetype]++;
     currentQ++;
@@ -914,38 +859,36 @@ function selectOption(btn, archetype) {
     }
   }, 400);
 }
-
 function showResults() {
   showScreen('screen-loading');
   setTimeout(() => {
     const sorted = Object.entries(scores).sort((a, b) => b[1] - a[1]);
     const topScore = sorted[0][1];
     const tied = sorted.filter(([k, v]) => v === topScore);
-
     if (tied.length > 1) {
       renderTiebreaker(tied[0][0], tied[1][0]);
     } else {
-      renderResult(sorted[0][0]);
+      // No tie - hold the winner and gate the result behind the reveal screen
+      pendingArchetype = sorted[0][0];
+      showScreen('screen-reveal');
     }
   }, 2200);
 }
-
 function renderTiebreaker(keyA, keyB) {
   const container = document.getElementById('tiebreaker-options');
   container.innerHTML = '';
-
   [keyA, keyB].forEach(key => {
     const data = archetypes[key];
     const card = document.createElement('button');
     card.style.cssText = `
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(201,168,76,0.3);
+      background: rgba(20,36,28,0.55);
+      border: 1px solid rgba(201,168,106,0.35);
       border-radius: 14px;
       padding: 1.25rem;
       cursor: pointer;
       text-align: left;
       transition: all 0.25s ease;
-      font-family: 'Crimson Pro', serif;
+      font-family: 'Cormorant Garamond', serif;
       color: var(--parchment);
       width: 100%;
       position: relative;
@@ -953,37 +896,40 @@ function renderTiebreaker(keyA, keyB) {
     card.innerHTML = `
       <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.75rem;">
         <div style="display:flex; align-items:center; gap:0.65rem;">
-          <span style="font-size:1.75rem;">${data.sigil}</span>
+          <span style="font-size:1.85rem;">${data.sigil}</span>
           <div>
-            <div style="font-family:'Cinzel Decorative',serif; font-size:0.95rem; color:var(--gold);">${data.name}</div>
-            <div style="font-style:italic; color:var(--mist); font-size:0.82rem; margin-top:0.1rem;">${data.element}</div>
+            <div style="font-family:'Cormorant Garamond',serif; font-size:1.15rem; font-weight:600; color:var(--gold);">${data.name}</div>
+            <div style="font-style:italic; color:var(--gold-light); font-size:0.95rem; margin-top:0.1rem;">${data.element}</div>
           </div>
         </div>
-        <div style="display:flex; align-items:center; gap:0.3rem; background:rgba(201,168,76,0.15); border:1px solid rgba(201,168,76,0.4); border-radius:20px; padding:0.3rem 0.75rem; font-family:'Cinzel Decorative',serif; font-size:0.52rem; letter-spacing:0.08em; color:var(--gold); text-transform:uppercase; white-space:nowrap; flex-shrink:0;">Reveal reading <span style="animation:slowSpin 1.5s ease-in-out infinite; display:inline-block;">→</span></div>
+        <div style="display:flex; align-items:center; gap:0.3rem; background:rgba(201,168,106,0.18); border:1px solid rgba(201,168,106,0.45); border-radius:20px; padding:0.35rem 0.8rem; font-family:'Cormorant Garamond',serif; font-size:0.68rem; letter-spacing:0.1em; color:var(--gold); text-transform:uppercase; white-space:nowrap; flex-shrink:0; font-weight:600;">Reveal reading <span style="animation:slowSpin 1.5s ease-in-out infinite; display:inline-block;">→</span></div>
       </div>
-      <div style="font-size:0.92rem; line-height:1.6; color:rgba(245,240,232,0.75); margin-bottom:0.85rem;">${data.tagline}</div>
-      <div style="margin-top:0.75rem; padding-top:0.65rem; border-top:1px solid rgba(201,168,76,0.15); display:flex; align-items:center; justify-content:center; gap:0.4rem; font-family:'Cinzel Decorative',serif; font-size:0.56rem; letter-spacing:0.1em; color:var(--gold); text-transform:uppercase; opacity:0.7;">✦ Tap to unlock your shadow, gift, siddhi + ritual</div>
+      <div style="font-size:1rem; line-height:1.65; color:var(--parchment); opacity:0.9; margin-bottom:0.85rem;">${data.tagline}</div>
+      <div style="margin-top:0.75rem; padding-top:0.65rem; border-top:1px solid rgba(201,168,106,0.20); display:flex; align-items:center; justify-content:center; gap:0.4rem; font-family:'Cormorant Garamond',serif; font-size:0.7rem; letter-spacing:0.12em; color:var(--gold); text-transform:uppercase; opacity:0.85; font-weight:600;">✦ Tap to unlock your shadow, gift, siddhi + ritual</div>
     `;
     card.addEventListener('mouseenter', () => {
       card.style.borderColor = 'var(--gold)';
-      card.style.background = 'rgba(201,168,76,0.09)';
+      card.style.background = 'rgba(201,168,106,0.10)';
       card.style.transform = 'translateY(-3px)';
-      card.style.boxShadow = '0 8px 24px rgba(201,168,76,0.2)';
+      card.style.boxShadow = '0 8px 24px rgba(201,168,106,0.25)';
     });
     card.addEventListener('mouseleave', () => {
-      card.style.borderColor = 'rgba(201,168,76,0.3)';
-      card.style.background = 'rgba(255,255,255,0.03)';
+      card.style.borderColor = 'rgba(201,168,106,0.35)';
+      card.style.background = 'rgba(20,36,28,0.55)';
       card.style.transform = 'translateY(0)';
       card.style.boxShadow = 'none';
     });
-    card.addEventListener('click', () => renderResult(key));
+    card.addEventListener('click', () => {
+      // Tiebreaker pick - hold the choice and route through the reveal gate
+      pendingArchetype = key;
+      showScreen('screen-reveal');
+    });
     container.appendChild(card);
   });
-
   showScreen('screen-tiebreaker');
 }
-
-async function renderResult(winner) {
+function renderResult(winner) {
+  // Formspree submission happens in submitReveal() before this is called.
   finalArchetype = winner;
   const data = archetypes[winner];
   document.getElementById('result-sigil').textContent = data.sigil;
@@ -998,35 +944,26 @@ async function renderResult(winner) {
   document.getElementById('result-mantra').textContent = data.mantra;
   document.getElementById('result-working-element').textContent = data.workingElement;
   document.getElementById('result-cta').textContent = data.cta;
-
-  // Send result to Formspree
-  try {
-    await fetch(FORMSPREE_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify({
-        name: userName,
-        email: userEmail,
-        archetype: data.name,
-        source: 'Sacred Archetype Quiz - Result'
-      })
-    });
-  } catch (e) {
-    // Fail silently
-  }
-
   showScreen('screen-result');
 }
-
 function retakeQuiz() {
   scores = { starseeder: 0, rootkeeper: 0, bridgewalker: 0, hollowbone: 0, firebringer: 0, weaverhand: 0 };
   currentQ = 0;
   selectedOption = null;
   finalArchetype = '';
+  pendingArchetype = null;
+  // Reset reveal-screen state so it's clean for the next pass
+  const revealBtn = document.getElementById('reveal-btn');
+  if (revealBtn) { revealBtn.disabled = false; revealBtn.textContent = 'REVEAL MY ARCHETYPE'; }
+  const revealName  = document.getElementById('reveal-name');
+  const revealEmail = document.getElementById('reveal-email');
+  const revealError = document.getElementById('reveal-error');
+  if (revealName)  revealName.value  = '';
+  if (revealEmail) revealEmail.value = '';
+  if (revealError) revealError.style.display = 'none';
   showScreen('screen-quiz');
   renderQuestion();
 }
-
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
@@ -1036,7 +973,6 @@ function showScreen(id) {
     window.parent.postMessage({ type: 'resize', height: height }, '*');
   }, 100);
 }
-
 window.addEventListener('load', () => {
   const height = document.body.scrollHeight;
   window.parent.postMessage({ type: 'resize', height: height }, '*');
